@@ -37,8 +37,10 @@ def clean_text(text: str) -> str:
     # Remove URLs
     text = re.sub(r'https?://\S+|www\.\S+', '', text)
     
-    # Remove dígitos
-    text = re.sub(r'\d+', '', text)
+    # Remove dígitos isolados. Não é recomendado remover todos os números, pois podem
+    # fazer parte de datas, valores monetários, etc, informações estas que são importantes
+    # em dados de notícias.
+    text = re.sub(r'\b\d+\b', '', text)
     
     # Remove pontuações e caracteres especiais
     text = re.sub(r'[^\w\s]', '', text)
@@ -83,5 +85,8 @@ def preprocess_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     
     # Aplica a função de limpeza de texto na coluna 'full_text'
     df['full_text_clean'] = df['full_text'].apply(clean_text)
+    
+    # Remove linhas em que 'full_text_clean' é uma string vazia após o pré-processamento    
+    df = df[df['full_text_clean'].str.strip() != '']
     
     return df
