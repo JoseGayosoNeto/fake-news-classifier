@@ -12,4 +12,6 @@ def train_svm(X_train, Y_train, X_test, Y_test):
     print("Relatório de Classificação:")
     print(classification_report(Y_test, y_pred, digits=2, target_names=["Fake News", "Real News"]))
     print("Matriz de Confusão:")
-    print(confusion_matrix(Y_test, y_pred))
+    cm = confusion_matrix(Y_test, y_pred)
+    
+    return cm
